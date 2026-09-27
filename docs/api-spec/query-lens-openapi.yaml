@@ -1,0 +1,1209 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: querylens@forgesphere.example.com
+    name: ForgeSphere Database Reliability
+  description: "Database query performance intelligence platform for the ForgeSphere\
+    \ \necosystem. Captures slow queries from all databases, analyzes execution \n\
+    plans, detects anti-patterns (N+1, full scans, missing indexes), and \nprovides\
+    \ ranked optimization recommendations with projected impact. \nTurns 3-hour debugging\
+    \ sessions into 30-second decisions. Zero code \nchanges required — pure observability\
+    \ on top of existing databases.\n"
+  title: Query Lens
+  version: 1.0.0
+servers:
+- description: Production Server
+  url: https://querylens.forgesphere.lightning.com/v1
+- description: Local Development Server
+  url: http://localhost:8123/v1
+security:
+- bearerAuth: []
+tags:
+- description: "Analyze, monitor, and optimize database queries."
+  name: Queries
+paths:
+  /analyze:
+    post:
+      description: "Takes a SQL query (or a reference to one from the slow-query log)\
+        \ \nand performs deep analysis:\n  - Parses the query and identifies tables,\
+        \ joins, filters\n  - Runs EXPLAIN (or EXPLAIN ANALYZE in dry-run mode)\n\
+        \  - Detects anti-patterns (N+1, missing WHERE, SELECT *, OR in WHERE)\n \
+        \ - Suggests indexes with projected performance improvement\n  - Recommends\
+        \ query rewrites when applicable\nZero production impact — analysis runs against\
+        \ a shadow clone or \nread replica.\n"
+      operationId: analyzeQuery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analyzeQuery_request"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryAnalysis"
+          description: Analysis accepted and queued.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid payload or missing required fields.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Analysis, recommendation, or slow query ID not found."
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Database connection, EXPLAIN engine, or analysis backend unavailable."
+      summary: Analyze a SQL query for performance optimization
+      tags:
+      - Queries
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Queries
+  /analyses/{analysisId}:
+    get:
+      description: "Returns the full analysis — parsed query plan, detected anti-patterns,\
+        \ \nranked optimization recommendations with projected improvement, and \n\
+        actual vs. projected performance. Includes ready-to-apply SQL for \nsuggested\
+        \ indexes and rewrites.\n"
+      operationId: getQueryAnalysis
+      parameters:
+      - example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        explode: false
+        in: path
+        name: analysisId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - example: true
+        explode: true
+        in: query
+        name: includeExplainPlan
+        required: false
+        schema:
+          default: false
+          description: Include full EXPLAIN tree (verbose output).
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryAnalysis"
+          description: Detailed query analysis.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Analysis, recommendation, or slow query ID not found."
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Database connection, EXPLAIN engine, or analysis backend unavailable."
+      summary: Fetch the detailed analysis result for a query
+      tags:
+      - Queries
+      x-accepts: application/json
+      x-tags:
+      - tag: Queries
+  /slow-queries:
+    get:
+      description: "Aggregated view of every query exceeding a latency threshold,\
+        \ ranked \nby total time consumed (latency × frequency). Shows which queries\
+        \ \nhurt the most — even a 200ms query can be worse than a 5s query if \n\
+        it runs a million times. Feeds the daily DBA dashboard.\n"
+      operationId: listSlowQueries
+      parameters:
+      - example: payment-db-prod
+        explode: true
+        in: query
+        name: databaseId
+        required: false
+        schema:
+          type: string
+        style: form
+      - example: 100
+        explode: true
+        in: query
+        name: minLatencyMs
+        required: false
+        schema:
+          default: 100
+          description: Only include queries slower than this.
+          type: integer
+        style: form
+      - example: 10
+        explode: true
+        in: query
+        name: minCallFrequency
+        required: false
+        schema:
+          default: 1
+          description: Only include queries called at least this often per minute.
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: environment
+        required: false
+        schema:
+          default: PRODUCTION
+          enum:
+          - DEV
+          - STAGING
+          - PRODUCTION
+          - ALL
+          type: string
+        style: form
+      - example: TOTAL_TIME_CONSUMED
+        explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          default: TOTAL_TIME_CONSUMED
+          enum:
+          - TOTAL_TIME_CONSUMED
+          - AVG_LATENCY
+          - P99_LATENCY
+          - CALL_FREQUENCY
+          - ROWS_EXAMINED
+          type: string
+        style: form
+      - example: LAST_24_HOURS
+        explode: true
+        in: query
+        name: window
+        required: false
+        schema:
+          default: LAST_24_HOURS
+          enum:
+          - LAST_HOUR
+          - LAST_6_HOURS
+          - LAST_24_HOURS
+          - LAST_7_DAYS
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listSlowQueries_200_response"
+          description: Paginated list of slow queries.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid payload or missing required fields.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Database connection, EXPLAIN engine, or analysis backend unavailable."
+      summary: List all slow queries across the platform
+      tags:
+      - Queries
+      x-accepts: application/json
+      x-tags:
+      - tag: Queries
+  /recommendations/{recommendationId}/apply:
+    post:
+      description: "Executes the recommended optimization — creating an index, applying\
+        \ a \nquery rewrite via a code patch (PR to Git), enabling a cache layer,\
+        \ \nor adjusting a database parameter. Every action is auditable and \nreversible\
+        \ within a grace window. Supports dry-run and canary modes.\n"
+      operationId: applyRecommendation
+      parameters:
+      - example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        explode: false
+        in: path
+        name: recommendationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/applyRecommendation_request"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptimizationAction"
+          description: Optimization accepted and being applied.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid payload or missing required fields.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Analysis, recommendation, or slow query ID not found."
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: A conflicting optimization is in progress or index already
+            exists.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: "Database connection, EXPLAIN engine, or analysis backend unavailable."
+      summary: Apply an optimization recommendation
+      tags:
+      - Queries
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Queries
+components:
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: Invalid payload or missing required fields.
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: "Analysis, recommendation, or slow query ID not found."
+    InternalError:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      description: "Database connection, EXPLAIN engine, or analysis backend unavailable."
+  schemas:
+    QueryAnalysis:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        performanceMetrics:
+          currentP99Ms: 847
+          currentP50Ms: 245
+          rowsExamined: 12500000
+          currentP95Ms: 620
+          callsPerMinute: 450
+          rowsReturned: 100
+          ratioRowsExaminedToReturned: 125000.0
+          totalTimeConsumedMinutes: 6352.5
+        errorMessage: errorMessage
+        normalizedQuery: SELECT * FROM orders WHERE customer_id = ? AND status = ?
+          ORDER BY created_at DESC LIMIT 100
+        antiPatterns:
+        - severity: CRITICAL
+          projectedImprovementMs: 835
+          affectedColumns:
+          - customer_id
+          - status
+          patternType: MISSING_INDEX
+          detail: "No index on (customer_id, status) — full table scan on 12M rows."
+        - severity: CRITICAL
+          projectedImprovementMs: 835
+          affectedColumns:
+          - customer_id
+          - status
+          patternType: MISSING_INDEX
+          detail: "No index on (customer_id, status) — full table scan on 12M rows."
+        parsedStructure:
+          joins: []
+          tables:
+          - orders
+          usesSelectStar: true
+          estimatedComplexity: SIMPLE
+          limit: 100
+          orderBy:
+          - created_at DESC
+          filters:
+          - customer_id = ?
+          - status = ?
+        recommendations:
+        - currentLatencyMs: 847
+          notes: Use CONCURRENTLY to avoid table lock. Index size ~380MB.
+          implementationEffort: EASY
+          estimatedCostUSDPerMonth: 12.5
+          description: This index eliminates the full table scan and speeds up the
+            ORDER BY clause.
+          sqlToApply: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON\
+            \ orders (customer_id, status, created_at DESC);"
+          implementationRisk: LOW
+          recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          recommendationType: ADD_INDEX
+          title: "Add composite index on orders(customer_id, status, created_at)"
+          projectedLatencyMs: 12
+          projectedImprovementPercent: 98.6
+        - currentLatencyMs: 847
+          notes: Use CONCURRENTLY to avoid table lock. Index size ~380MB.
+          implementationEffort: EASY
+          estimatedCostUSDPerMonth: 12.5
+          description: This index eliminates the full table scan and speeds up the
+            ORDER BY clause.
+          sqlToApply: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON\
+            \ orders (customer_id, status, created_at DESC);"
+          implementationRisk: LOW
+          recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          recommendationType: ADD_INDEX
+          title: "Add composite index on orders(customer_id, status, created_at)"
+          projectedLatencyMs: 12
+          projectedImprovementPercent: 98.6
+        databaseType: POSTGRESQL
+        explainPlan:
+          planNode: Seq Scan
+          table: orders
+          cost: 125000.00..125000.00
+          rows: 12500000
+          filter: (customer_id = 12345 AND status = 'PENDING')
+        aiSummary: This query scans 12.5M rows to return 100. Adding a composite index
+          drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY
+          to avoid locks.
+        analysisId: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+        databaseId: payment-db-prod
+        submittedAt: 2000-01-23T04:56:07.000+00:00
+        queryFingerprint: fp-a1b2c3d4e5f6
+        status: COMPLETED
+      properties:
+        analysisId:
+          example: 9c8f1a3b-6d7e-4a12-8f5e-123456789abc
+          format: uuid
+          type: string
+        databaseId:
+          example: payment-db-prod
+          type: string
+        databaseType:
+          enum:
+          - POSTGRESQL
+          - MYSQL
+          - MONGODB
+          - ORACLE
+          - SQLSERVER
+          - COCKROACHDB
+          example: POSTGRESQL
+          type: string
+        status:
+          enum:
+          - QUEUED
+          - PARSING
+          - EXPLAINING
+          - ANALYZING
+          - ANALYZING_INDEXES
+          - COMPLETED
+          - FAILED
+          example: COMPLETED
+          type: string
+        submittedAt:
+          format: date-time
+          type: string
+        completedAt:
+          format: date-time
+          type: string
+        normalizedQuery:
+          description: Query with bind parameters replaced by placeholders (for grouping).
+          example: SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER
+            BY created_at DESC LIMIT 100
+          type: string
+        queryFingerprint:
+          description: Stable hash identifying this query pattern.
+          example: fp-a1b2c3d4e5f6
+          type: string
+        parsedStructure:
+          $ref: "#/components/schemas/QueryAnalysis_parsedStructure"
+        antiPatterns:
+          items:
+            $ref: "#/components/schemas/QueryAnalysis_antiPatterns_inner"
+          type: array
+        performanceMetrics:
+          $ref: "#/components/schemas/QueryAnalysis_performanceMetrics"
+        recommendations:
+          items:
+            $ref: "#/components/schemas/QueryAnalysis_recommendations_inner"
+          type: array
+        explainPlan:
+          additionalProperties: true
+          description: Full EXPLAIN tree if includeExplainPlan=true.
+          example:
+            planNode: Seq Scan
+            table: orders
+            cost: 125000.00..125000.00
+            rows: 12500000
+            filter: (customer_id = 12345 AND status = 'PENDING')
+          type: object
+        aiSummary:
+          description: AI-generated plain-English summary.
+          example: This query scans 12.5M rows to return 100. Adding a composite index
+            drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY
+            to avoid locks.
+          type: string
+        errorMessage:
+          description: Populated only if status = FAILED.
+          type: string
+      required:
+      - analysisId
+      - databaseId
+      - status
+      - submittedAt
+      type: object
+    SlowQuery:
+      example:
+        avgLatencyMs: 620
+        lastSeenAt: 2000-01-23T04:56:07.000+00:00
+        recommendationCount: 2
+        sampleQuery: SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING'
+          ORDER BY created_at DESC LIMIT 100
+        estimatedRecoverableLatencyMs: 835
+        trend: WORSENING
+        rowsExamined: 12500000
+        normalizedQuery: SELECT * FROM orders WHERE customer_id = ? AND status = ?
+          ORDER BY created_at DESC LIMIT 100
+        callFrequency: 450
+        antiPatternsFound:
+        - SELECT_STAR
+        - MISSING_INDEX
+        - FULL_TABLE_SCAN
+        totalTimeConsumedMinutes: 6352.5
+        firstSeenAt: 2000-01-23T04:56:07.000+00:00
+        databaseType: POSTGRESQL
+        estimatedRecoverablePercent: 98.6
+        indexUsage: []
+        applicationContext:
+          owner: order-team
+          endpoint: GET /api/v1/orders
+          service: order-service
+        slowQueryId: sq-abc-123
+        p50LatencyMs: 245
+        databaseId: payment-db-prod
+        p95LatencyMs: 620
+        rowsReturned: 100
+        hasRecommendation: true
+        queryFingerprint: fp-a1b2c3d4e5f6
+        p99LatencyMs: 847
+      properties:
+        slowQueryId:
+          example: sq-abc-123
+          type: string
+        databaseId:
+          example: payment-db-prod
+          type: string
+        databaseType:
+          enum:
+          - POSTGRESQL
+          - MYSQL
+          - MONGODB
+          - ORACLE
+          - SQLSERVER
+          - COCKROACHDB
+          example: POSTGRESQL
+          type: string
+        queryFingerprint:
+          example: fp-a1b2c3d4e5f6
+          type: string
+        normalizedQuery:
+          example: SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER
+            BY created_at DESC LIMIT 100
+          type: string
+        sampleQuery:
+          description: One real example with actual parameters (PII redacted).
+          example: SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING'
+            ORDER BY created_at DESC LIMIT 100
+          type: string
+        avgLatencyMs:
+          example: 620
+          type: integer
+        p50LatencyMs:
+          example: 245
+          type: integer
+        p95LatencyMs:
+          example: 620
+          type: integer
+        p99LatencyMs:
+          example: 847
+          type: integer
+        callFrequency:
+          description: Calls per minute.
+          example: 450
+          type: integer
+        totalTimeConsumedMinutes:
+          description: Latency × frequency — how much DB time this query eats.
+          example: 6352.5
+          format: double
+          type: number
+        rowsExamined:
+          example: 12500000
+          type: integer
+        rowsReturned:
+          example: 100
+          type: integer
+        indexUsage:
+          example: []
+          items:
+            type: string
+          type: array
+        antiPatternsFound:
+          example:
+          - SELECT_STAR
+          - MISSING_INDEX
+          - FULL_TABLE_SCAN
+          items:
+            type: string
+          type: array
+        estimatedRecoverableLatencyMs:
+          example: 835
+          type: integer
+        estimatedRecoverablePercent:
+          example: 98.6
+          format: double
+          type: number
+        applicationContext:
+          $ref: "#/components/schemas/SlowQuery_applicationContext"
+        hasRecommendation:
+          example: true
+          type: boolean
+        recommendationCount:
+          example: 2
+          type: integer
+        firstSeenAt:
+          format: date-time
+          type: string
+        lastSeenAt:
+          format: date-time
+          type: string
+        trend:
+          enum:
+          - IMPROVING
+          - STABLE
+          - WORSENING
+          - SPIKE
+          example: WORSENING
+          type: string
+      required:
+      - avgLatencyMs
+      - callFrequency
+      - databaseId
+      - firstSeenAt
+      - queryFingerprint
+      - slowQueryId
+      - totalTimeConsumedMinutes
+      type: object
+    OptimizationAction:
+      example:
+        actualImprovementPercent: 98.6
+        auditReference: audit://querylens/action-f47ac10b
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        errorMessage: errorMessage
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        recommendationId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        mode: CANARY_ON_REPLICA
+        afterLatencyMs: 12
+        beforeLatencyMs: 847
+        storageAddedBytes: 398000000
+        revertUntil: 2000-01-23T04:56:07.000+00:00
+        actionId: f47ac10b-58cc-4372-a567-0e02b2c3d479
+        appliedBy: dba@forgesphere.example.com
+        sqlExecuted: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON\
+          \ orders (customer_id, status, created_at DESC);"
+        databaseId: payment-db-prod
+        status: APPLYING
+      properties:
+        actionId:
+          example: f47ac10b-58cc-4372-a567-0e02b2c3d479
+          format: uuid
+          type: string
+        recommendationId:
+          format: uuid
+          type: string
+        databaseId:
+          example: payment-db-prod
+          type: string
+        mode:
+          enum:
+          - DRY_RUN
+          - CANARY_ON_REPLICA
+          - APPLY_NOW
+          - SCHEDULED
+          example: CANARY_ON_REPLICA
+          type: string
+        status:
+          enum:
+          - QUEUED
+          - VALIDATING
+          - APPLYING
+          - VERIFYING
+          - COMPLETED
+          - REVERTED
+          - FAILED
+          example: APPLYING
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        completedAt:
+          format: date-time
+          type: string
+        sqlExecuted:
+          example: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders\
+            \ (customer_id, status, created_at DESC);"
+          type: string
+        beforeLatencyMs:
+          example: 847
+          type: integer
+        afterLatencyMs:
+          example: 12
+          type: integer
+        actualImprovementPercent:
+          example: 98.6
+          format: double
+          type: number
+        storageAddedBytes:
+          example: 398000000
+          type: integer
+        revertUntil:
+          format: date-time
+          type: string
+        appliedBy:
+          example: dba@forgesphere.example.com
+          type: string
+        auditReference:
+          example: audit://querylens/action-f47ac10b
+          type: string
+        errorMessage:
+          type: string
+      required:
+      - actionId
+      - mode
+      - recommendationId
+      - startedAt
+      - status
+      type: object
+    ErrorResponse:
+      properties:
+        status:
+          example: 409
+          type: integer
+        errorCode:
+          example: INDEX_ALREADY_EXISTS
+          type: string
+        message:
+          example: "An index on (customer_id, status, created_at) already exists on\
+            \ orders."
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+        path:
+          example: /v1/recommendations/apply
+          type: string
+      required:
+      - message
+      - path
+      - status
+      - timestamp
+      type: object
+    analyzeQuery_request:
+      properties:
+        databaseId:
+          description: Database identifier (from registered databases).
+          example: payment-db-prod
+          type: string
+        querySource:
+          enum:
+          - INLINE_SQL
+          - SLOW_QUERY_LOG
+          - APM_TRACE
+          - ORM_GENERATED
+          - MANUAL_UPLOAD
+          example: INLINE_SQL
+          type: string
+        inlineSql:
+          description: Required if querySource = INLINE_SQL.
+          example: SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING'
+            ORDER BY created_at DESC LIMIT 100;
+          type: string
+        slowQueryId:
+          description: Required if querySource = SLOW_QUERY_LOG.
+          example: sq-abc-123
+          type: string
+        parameters:
+          additionalProperties: true
+          description: Optional bind parameters for prepared statements.
+          example:
+            customer_id: 12345
+            status: PENDING
+          type: object
+        includeExplainAnalyze:
+          default: false
+          description: "Run EXPLAIN ANALYZE (executes query, higher cost)."
+          example: false
+          type: boolean
+        environment:
+          default: STAGING
+          description: Environment context for recommendations.
+          enum:
+          - DEV
+          - STAGING
+          - PRODUCTION
+          example: PRODUCTION
+          type: string
+        applicationContext:
+          additionalProperties: true
+          description: Which service and endpoint this query comes from.
+          example:
+            service: order-service
+            endpoint: GET /api/v1/orders
+            p99LatencyMs: 847
+            callFrequencyPerMinute: 450
+          type: object
+      required:
+      - databaseId
+      - querySource
+      type: object
+    listSlowQueries_200_response_summary:
+      example:
+        estimatedRecoverableLatencyPercent: 34.5
+        totalQueriesAnalyzed: 45280
+        totalTimeConsumedMinutes: 3420.5
+        queriesNeedingAttention: 12
+      properties:
+        totalQueriesAnalyzed:
+          example: 45280
+          type: integer
+        totalTimeConsumedMinutes:
+          example: 3420.5
+          format: double
+          type: number
+        queriesNeedingAttention:
+          example: 12
+          type: integer
+        estimatedRecoverableLatencyPercent:
+          example: 34.5
+          format: double
+          type: number
+      type: object
+    listSlowQueries_200_response:
+      example:
+        summary:
+          estimatedRecoverableLatencyPercent: 34.5
+          totalQueriesAnalyzed: 45280
+          totalTimeConsumedMinutes: 3420.5
+          queriesNeedingAttention: 12
+        totalPages: 6
+        content:
+        - avgLatencyMs: 620
+          lastSeenAt: 2000-01-23T04:56:07.000+00:00
+          recommendationCount: 2
+          sampleQuery: SELECT * FROM orders WHERE customer_id = 12345 AND status =
+            'PENDING' ORDER BY created_at DESC LIMIT 100
+          estimatedRecoverableLatencyMs: 835
+          trend: WORSENING
+          rowsExamined: 12500000
+          normalizedQuery: SELECT * FROM orders WHERE customer_id = ? AND status =
+            ? ORDER BY created_at DESC LIMIT 100
+          callFrequency: 450
+          antiPatternsFound:
+          - SELECT_STAR
+          - MISSING_INDEX
+          - FULL_TABLE_SCAN
+          totalTimeConsumedMinutes: 6352.5
+          firstSeenAt: 2000-01-23T04:56:07.000+00:00
+          databaseType: POSTGRESQL
+          estimatedRecoverablePercent: 98.6
+          indexUsage: []
+          applicationContext:
+            owner: order-team
+            endpoint: GET /api/v1/orders
+            service: order-service
+          slowQueryId: sq-abc-123
+          p50LatencyMs: 245
+          databaseId: payment-db-prod
+          p95LatencyMs: 620
+          rowsReturned: 100
+          hasRecommendation: true
+          queryFingerprint: fp-a1b2c3d4e5f6
+          p99LatencyMs: 847
+        - avgLatencyMs: 620
+          lastSeenAt: 2000-01-23T04:56:07.000+00:00
+          recommendationCount: 2
+          sampleQuery: SELECT * FROM orders WHERE customer_id = 12345 AND status =
+            'PENDING' ORDER BY created_at DESC LIMIT 100
+          estimatedRecoverableLatencyMs: 835
+          trend: WORSENING
+          rowsExamined: 12500000
+          normalizedQuery: SELECT * FROM orders WHERE customer_id = ? AND status =
+            ? ORDER BY created_at DESC LIMIT 100
+          callFrequency: 450
+          antiPatternsFound:
+          - SELECT_STAR
+          - MISSING_INDEX
+          - FULL_TABLE_SCAN
+          totalTimeConsumedMinutes: 6352.5
+          firstSeenAt: 2000-01-23T04:56:07.000+00:00
+          databaseType: POSTGRESQL
+          estimatedRecoverablePercent: 98.6
+          indexUsage: []
+          applicationContext:
+            owner: order-team
+            endpoint: GET /api/v1/orders
+            service: order-service
+          slowQueryId: sq-abc-123
+          p50LatencyMs: 245
+          databaseId: payment-db-prod
+          p95LatencyMs: 620
+          rowsReturned: 100
+          hasRecommendation: true
+          queryFingerprint: fp-a1b2c3d4e5f6
+          p99LatencyMs: 847
+        totalElements: 0
+      properties:
+        content:
+          items:
+            $ref: "#/components/schemas/SlowQuery"
+          type: array
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        summary:
+          $ref: "#/components/schemas/listSlowQueries_200_response_summary"
+      type: object
+    applyRecommendation_request:
+      properties:
+        mode:
+          description: How to apply the change.
+          enum:
+          - DRY_RUN
+          - CANARY_ON_REPLICA
+          - APPLY_NOW
+          - SCHEDULED
+          example: CANARY_ON_REPLICA
+          type: string
+        reason:
+          example: "Index on orders(customer_id, status) — canary on read replica\
+            \ first."
+          minLength: 15
+          type: string
+        scheduledAt:
+          description: Required if mode = SCHEDULED (low-traffic window recommended).
+          example: 2026-09-28T02:00:00Z
+          format: date-time
+          type: string
+        revertWindowMinutes:
+          default: 60
+          description: How long the change can be reverted.
+          example: 60
+          maximum: 1440
+          minimum: 5
+          type: integer
+        notifyChannels:
+          example:
+          - SLACK
+          items:
+            enum:
+            - EMAIL
+            - SLACK
+            - PAGERDUTY
+            - WEBHOOK
+            type: string
+          type: array
+      required:
+      - mode
+      - reason
+      type: object
+    QueryAnalysis_parsedStructure:
+      example:
+        joins: []
+        tables:
+        - orders
+        usesSelectStar: true
+        estimatedComplexity: SIMPLE
+        limit: 100
+        orderBy:
+        - created_at DESC
+        filters:
+        - customer_id = ?
+        - status = ?
+      properties:
+        tables:
+          example:
+          - orders
+          items:
+            type: string
+          type: array
+        joins:
+          example: []
+          items:
+            type: string
+          type: array
+        filters:
+          example:
+          - customer_id = ?
+          - status = ?
+          items:
+            type: string
+          type: array
+        orderBy:
+          example:
+          - created_at DESC
+          items:
+            type: string
+          type: array
+        limit:
+          example: 100
+          type: integer
+        usesSelectStar:
+          example: true
+          type: boolean
+        estimatedComplexity:
+          enum:
+          - TRIVIAL
+          - SIMPLE
+          - MODERATE
+          - COMPLEX
+          - VERY_COMPLEX
+          example: SIMPLE
+          type: string
+      type: object
+    QueryAnalysis_antiPatterns_inner:
+      example:
+        severity: CRITICAL
+        projectedImprovementMs: 835
+        affectedColumns:
+        - customer_id
+        - status
+        patternType: MISSING_INDEX
+        detail: "No index on (customer_id, status) — full table scan on 12M rows."
+      properties:
+        patternType:
+          enum:
+          - SELECT_STAR
+          - MISSING_INDEX
+          - FULL_TABLE_SCAN
+          - N_PLUS_ONE
+          - IMPLICIT_CAST
+          - FUNCTION_ON_INDEXED_COLUMN
+          - LEADING_WILDCARD_LIKE
+          - OR_IN_WHERE
+          - NOT_IN_SUBQUERY
+          - CROSS_JOIN
+          - MISSING_LIMIT
+          - REDUNDANT_DISTINCT
+          - SUBQUERY_IN_SELECT
+          example: MISSING_INDEX
+          type: string
+        severity:
+          enum:
+          - INFO
+          - WARNING
+          - CRITICAL
+          example: CRITICAL
+          type: string
+        detail:
+          example: "No index on (customer_id, status) — full table scan on 12M rows."
+          type: string
+        affectedColumns:
+          example:
+          - customer_id
+          - status
+          items:
+            type: string
+          type: array
+        projectedImprovementMs:
+          example: 835
+          type: integer
+      required:
+      - detail
+      - patternType
+      - severity
+      type: object
+    QueryAnalysis_performanceMetrics:
+      example:
+        currentP99Ms: 847
+        currentP50Ms: 245
+        rowsExamined: 12500000
+        currentP95Ms: 620
+        callsPerMinute: 450
+        rowsReturned: 100
+        ratioRowsExaminedToReturned: 125000.0
+        totalTimeConsumedMinutes: 6352.5
+      properties:
+        currentP50Ms:
+          example: 245
+          type: integer
+        currentP95Ms:
+          example: 620
+          type: integer
+        currentP99Ms:
+          example: 847
+          type: integer
+        rowsExamined:
+          example: 12500000
+          type: integer
+        rowsReturned:
+          example: 100
+          type: integer
+        ratioRowsExaminedToReturned:
+          example: 125000.0
+          format: double
+          type: number
+        callsPerMinute:
+          example: 450
+          type: integer
+        totalTimeConsumedMinutes:
+          example: 6352.5
+          format: double
+          type: number
+      type: object
+    QueryAnalysis_recommendations_inner:
+      example:
+        currentLatencyMs: 847
+        notes: Use CONCURRENTLY to avoid table lock. Index size ~380MB.
+        implementationEffort: EASY
+        estimatedCostUSDPerMonth: 12.5
+        description: This index eliminates the full table scan and speeds up the ORDER
+          BY clause.
+        sqlToApply: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders\
+          \ (customer_id, status, created_at DESC);"
+        implementationRisk: LOW
+        recommendationId: b1a2c3d4-e5f6-7890-1234-567890abcdef
+        recommendationType: ADD_INDEX
+        title: "Add composite index on orders(customer_id, status, created_at)"
+        projectedLatencyMs: 12
+        projectedImprovementPercent: 98.6
+      properties:
+        recommendationId:
+          example: b1a2c3d4-e5f6-7890-1234-567890abcdef
+          format: uuid
+          type: string
+        recommendationType:
+          enum:
+          - ADD_INDEX
+          - MODIFY_INDEX
+          - DROP_INDEX
+          - REWRITE_QUERY
+          - ADD_CACHE
+          - PARTITION_TABLE
+          - UPDATE_STATISTICS
+          - CHANGE_SCHEMA
+          - DENORMALIZE
+          example: ADD_INDEX
+          type: string
+        title:
+          example: "Add composite index on orders(customer_id, status, created_at)"
+          type: string
+        description:
+          example: This index eliminates the full table scan and speeds up the ORDER
+            BY clause.
+          type: string
+        sqlToApply:
+          example: "CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders\
+            \ (customer_id, status, created_at DESC);"
+          type: string
+        currentLatencyMs:
+          example: 847
+          type: integer
+        projectedLatencyMs:
+          example: 12
+          type: integer
+        projectedImprovementPercent:
+          example: 98.6
+          format: double
+          type: number
+        implementationRisk:
+          enum:
+          - NONE
+          - LOW
+          - MEDIUM
+          - HIGH
+          - BREAKING
+          example: LOW
+          type: string
+        implementationEffort:
+          enum:
+          - TRIVIAL
+          - EASY
+          - MEDIUM
+          - HARD
+          example: EASY
+          type: string
+        estimatedCostUSDPerMonth:
+          description: Additional storage cost.
+          example: 12.5
+          format: double
+          type: number
+        notes:
+          example: Use CONCURRENTLY to avoid table lock. Index size ~380MB.
+          type: string
+      required:
+      - projectedImprovementPercent
+      - projectedLatencyMs
+      - recommendationId
+      - recommendationType
+      type: object
+    SlowQuery_applicationContext:
+      example:
+        owner: order-team
+        endpoint: GET /api/v1/orders
+        service: order-service
+      properties:
+        service:
+          example: order-service
+          type: string
+        endpoint:
+          example: GET /api/v1/orders
+          type: string
+        owner:
+          example: order-team
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      description: "DBA, SRE, or Admin JWT for query optimization."
+      scheme: bearer
+      type: http
