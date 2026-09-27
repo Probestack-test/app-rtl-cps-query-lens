@@ -1,0 +1,142 @@
+{
+  "info" : {
+    "name" : "query-lens Mock Test Collection",
+    "description" : "Generated from ForgeSphere mock endpoint definitions.",
+    "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable" : [ {
+    "key" : "mockBaseUrl",
+    "value" : "https://forgesphere.probestack.io/mock-api/v1/api/mocks/mock-49ffaa2a"
+  }, {
+    "key" : "userEmail",
+    "value" : ""
+  }, {
+    "key" : "id",
+    "value" : "sample-id"
+  } ],
+  "item" : [ {
+    "name" : "POST /analyze",
+    "request" : {
+      "method" : "POST",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/analyze"
+      },
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"databaseId\":\"payment-db-prod\",\"querySource\":\"INLINE_SQL\",\"inlineSql\":\"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100;\",\"slowQueryId\":\"sq-abc-123\",\"parameters\":{\"customer_id\":12345,\"status\":\"PENDING\"},\"includeExplainAnalyze\":false,\"environment\":\"PRODUCTION\",\"applicationContext\":{\"service\":\"order-service\",\"endpoint\":\"GET /api/v1/orders\",\"p99LatencyMs\":847,\"callFrequencyPerMinute\":450}}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 202",
+      "code" : 202,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"analysisId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"databaseId\":\"payment-db-prod\",\"databaseType\":\"POSTGRESQL\",\"status\":\"COMPLETED\",\"submittedAt\":\"2024-01-01T00:00:00Z\",\"completedAt\":\"2024-01-01T00:00:00Z\",\"normalizedQuery\":\"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\"queryFingerprint\":\"fp-a1b2c3d4e5f6\",\"parsedStructure\":{\"tables\":[\"orders\"],\"joins\":[],\"filters\":[\"customer_id = ?\",\"status = ?\"],\"orderBy\":[\"created_at DESC\"],\"limit\":100,\"usesSelectStar\":true,\"estimatedComplexity\":\"SIMPLE\"},\"antiPatterns\":[{\"patternType\":\"MISSING_INDEX\",\"severity\":\"CRITICAL\",\"detail\":\"No index on (customer_id, status) — full table scan on 12M rows.\",\"affectedColumns\":[\"customer_id\",\"status\"],\"projectedImprovementMs\":835}],\"performanceMetrics\":{\"currentP50Ms\":245,\"currentP95Ms\":620,\"currentP99Ms\":847,\"rowsExamined\":12500000,\"rowsReturned\":100,\"ratioRowsExaminedToReturned\":125000.0,\"callsPerMinute\":450,\"totalTimeConsumedMinutes\":6352.5},\"recommendations\":[{\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"recommendationType\":\"ADD_INDEX\",\"title\":\"Add composite index on orders(customer_id, status, created_at)\",\"description\":\"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\"sqlToApply\":\"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\"currentLatencyMs\":847,\"projectedLatencyMs\":12,\"projectedImprovementPercent\":98.6,\"implementationRisk\":\"LOW\",\"implementationEffort\":\"EASY\",\"estimatedCostUSDPerMonth\":12.5,\"notes\":\"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\"}],\"explainPlan\":{\"planNode\":\"Seq Scan\",\"table\":\"orders\",\"cost\":\"125000.00..125000.00\",\"rows\":12500000,\"filter\":\"(customer_id = 12345 AND status = 'PENDING')\"},\"aiSummary\":\"This query scans 12.5M rows to return 100. Adding a composite index drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY to avoid locks.\",\"errorMessage\":\"string\"}"
+    } ]
+  }, {
+    "name" : "GET /analyses/{analysisId}",
+    "request" : {
+      "method" : "GET",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/analyses/{analysisId}"
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 200",
+      "code" : 200,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"analysisId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"databaseId\":\"payment-db-prod\",\"databaseType\":\"POSTGRESQL\",\"status\":\"COMPLETED\",\"submittedAt\":\"2024-01-01T00:00:00Z\",\"completedAt\":\"2024-01-01T00:00:00Z\",\"normalizedQuery\":\"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\"queryFingerprint\":\"fp-a1b2c3d4e5f6\",\"parsedStructure\":{\"tables\":[\"orders\"],\"joins\":[],\"filters\":[\"customer_id = ?\",\"status = ?\"],\"orderBy\":[\"created_at DESC\"],\"limit\":100,\"usesSelectStar\":true,\"estimatedComplexity\":\"SIMPLE\"},\"antiPatterns\":[{\"patternType\":\"MISSING_INDEX\",\"severity\":\"CRITICAL\",\"detail\":\"No index on (customer_id, status) — full table scan on 12M rows.\",\"affectedColumns\":[\"customer_id\",\"status\"],\"projectedImprovementMs\":835}],\"performanceMetrics\":{\"currentP50Ms\":245,\"currentP95Ms\":620,\"currentP99Ms\":847,\"rowsExamined\":12500000,\"rowsReturned\":100,\"ratioRowsExaminedToReturned\":125000.0,\"callsPerMinute\":450,\"totalTimeConsumedMinutes\":6352.5},\"recommendations\":[{\"recommendationId\":\"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\"recommendationType\":\"ADD_INDEX\",\"title\":\"Add composite index on orders(customer_id, status, created_at)\",\"description\":\"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\"sqlToApply\":\"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\"currentLatencyMs\":847,\"projectedLatencyMs\":12,\"projectedImprovementPercent\":98.6,\"implementationRisk\":\"LOW\",\"implementationEffort\":\"EASY\",\"estimatedCostUSDPerMonth\":12.5,\"notes\":\"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\"}],\"explainPlan\":{\"planNode\":\"Seq Scan\",\"table\":\"orders\",\"cost\":\"125000.00..125000.00\",\"rows\":12500000,\"filter\":\"(customer_id = 12345 AND status = 'PENDING')\"},\"aiSummary\":\"This query scans 12.5M rows to return 100. Adding a composite index drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY to avoid locks.\",\"errorMessage\":\"string\"}"
+    } ]
+  }, {
+    "name" : "GET /slow-queries",
+    "request" : {
+      "method" : "GET",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/slow-queries"
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 200",
+      "code" : 200,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"content\":[{\"slowQueryId\":\"sq-abc-123\",\"databaseId\":\"payment-db-prod\",\"databaseType\":\"POSTGRESQL\",\"queryFingerprint\":\"fp-a1b2c3d4e5f6\",\"normalizedQuery\":\"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\"sampleQuery\":\"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100\",\"avgLatencyMs\":620,\"p50LatencyMs\":245,\"p95LatencyMs\":620,\"p99LatencyMs\":847,\"callFrequency\":450,\"totalTimeConsumedMinutes\":6352.5,\"rowsExamined\":12500000,\"rowsReturned\":100,\"indexUsage\":[],\"antiPatternsFound\":[\"SELECT_STAR\",\"MISSING_INDEX\",\"FULL_TABLE_SCAN\"],\"estimatedRecoverableLatencyMs\":835,\"estimatedRecoverablePercent\":98.6,\"applicationContext\":{\"service\":\"order-service\",\"endpoint\":\"GET /api/v1/orders\",\"owner\":\"order-team\"},\"hasRecommendation\":true,\"recommendationCount\":2,\"firstSeenAt\":\"2024-01-01T00:00:00Z\",\"lastSeenAt\":\"2024-01-01T00:00:00Z\",\"trend\":\"WORSENING\"}],\"totalElements\":0,\"totalPages\":0,\"summary\":{\"totalQueriesAnalyzed\":45280,\"totalTimeConsumedMinutes\":3420.5,\"queriesNeedingAttention\":12,\"estimatedRecoverableLatencyPercent\":34.5}}"
+    } ]
+  }, {
+    "name" : "POST /recommendations/{recommendationId}/apply",
+    "request" : {
+      "method" : "POST",
+      "header" : [ {
+        "key" : "Accept",
+        "value" : "application/json"
+      }, {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      }, {
+        "key" : "x-user-email",
+        "value" : "{{userEmail}}"
+      } ],
+      "url" : {
+        "raw" : "{{mockBaseUrl}}/recommendations/{recommendationId}/apply"
+      },
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"mode\":\"CANARY_ON_REPLICA\",\"reason\":\"Index on orders(customer_id, status) — canary on read replica first.\",\"scheduledAt\":\"2026-09-28T02:00:00Z\",\"revertWindowMinutes\":60,\"notifyChannels\":[\"SLACK\"]}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      }
+    },
+    "response" : [ {
+      "name" : "Mock 202",
+      "code" : 202,
+      "status" : "OK",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"actionId\":\"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\"recommendationId\":\"00000000-0000-0000-0000-000000000000\",\"databaseId\":\"payment-db-prod\",\"mode\":\"CANARY_ON_REPLICA\",\"status\":\"APPLYING\",\"startedAt\":\"2024-01-01T00:00:00Z\",\"completedAt\":\"2024-01-01T00:00:00Z\",\"sqlExecuted\":\"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\"beforeLatencyMs\":847,\"afterLatencyMs\":12,\"actualImprovementPercent\":98.6,\"storageAddedBytes\":398000000,\"revertUntil\":\"2024-01-01T00:00:00Z\",\"appliedBy\":\"dba@forgesphere.example.com\",\"auditReference\":\"audit://querylens/action-f47ac10b\",\"errorMessage\":\"string\"}"
+    } ]
+  } ]
+}
