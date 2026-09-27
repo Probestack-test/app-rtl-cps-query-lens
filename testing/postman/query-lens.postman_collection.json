@@ -1,0 +1,750 @@
+{
+  "info" : {
+    "_postman_id" : "2df31eda-37d2-4d90-a35b-0d409723c9c7",
+    "name" : "Query Lens",
+    "description" : "Generated Postman collection for query-lens",
+    "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable" : [ {
+    "key" : "baseUrl",
+    "value" : "http://localhost:8080",
+    "type" : "string"
+  }, {
+    "key" : "bearerToken",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "resourceId",
+    "value" : "sample-id",
+    "type" : "string"
+  }, {
+    "key" : "clientId",
+    "value" : "generated-service-client",
+    "type" : "string"
+  }, {
+    "key" : "clientSecret",
+    "value" : "change-me",
+    "type" : "string"
+  }, {
+    "key" : "scope",
+    "value" : "api.read api.write",
+    "type" : "string"
+  } ],
+  "item" : [ {
+    "name" : "Health",
+    "item" : [ {
+      "name" : "Health",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Liveness",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health/liveness",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health", "liveness" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health/liveness",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health", "liveness" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Readiness",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/health/readiness",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "health", "readiness" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/health/readiness",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "health", "readiness" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Metrics",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/metrics",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "metrics" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/metrics",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "metrics" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    }, {
+      "name" : "Prometheus",
+      "request" : {
+        "auth" : {
+          "type" : "noauth"
+        },
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/actuator/prometheus",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "actuator", "prometheus" ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "auth" : {
+            "type" : "noauth"
+          },
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/actuator/prometheus",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "actuator", "prometheus" ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"status\" : \"UP\"\n}"
+      } ]
+    } ]
+  }, {
+    "name" : "Security",
+    "item" : [ {
+      "name" : "Get OAuth2 Token",
+      "request" : {
+        "auth" : {
+          "type" : "basic",
+          "basic" : [ {
+            "key" : "username",
+            "value" : "{{clientId}}",
+            "type" : "string"
+          }, {
+            "key" : "password",
+            "value" : "{{clientSecret}}",
+            "type" : "string"
+          } ]
+        },
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/x-www-form-urlencoded"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "body" : {
+          "mode" : "urlencoded",
+          "urlencoded" : [ {
+            "key" : "grant_type",
+            "value" : "client_credentials",
+            "type" : "text"
+          }, {
+            "key" : "scope",
+            "value" : "{{scope}}",
+            "type" : "text"
+          } ]
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/oauth2/token",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "oauth2", "token" ]
+        }
+      },
+      "event" : [ {
+        "listen" : "test",
+        "script" : {
+          "type" : "text/javascript",
+          "exec" : [ "const json = pm.response.json();", "if (json.access_token) {", "  pm.collectionVariables.set(\"bearerToken\", json.access_token);", "}" ]
+        }
+      } ]
+    } ]
+  }, {
+    "name" : "Queries",
+    "item" : [ {
+      "name" : "Analyze a SQL query for performance optimization",
+      "request" : {
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/analyze",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "analyze" ]
+        },
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\n  \"databaseId\" : \"payment-db-prod\",\n  \"querySource\" : \"INLINE_SQL\",\n  \"inlineSql\" : \"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100;\",\n  \"slowQueryId\" : \"sq-abc-123\",\n  \"parameters\" : {\n    \"customer_id\" : 12345,\n    \"status\" : \"PENDING\"\n  },\n  \"includeExplainAnalyze\" : false,\n  \"environment\" : \"PRODUCTION\",\n  \"applicationContext\" : {\n    \"service\" : \"order-service\",\n    \"endpoint\" : \"GET /api/v1/orders\",\n    \"p99LatencyMs\" : 847,\n    \"callFrequencyPerMinute\" : 450\n  }\n}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        }
+      },
+      "response" : [ {
+        "name" : "Accepted",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/analyze",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "analyze" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"databaseId\" : \"payment-db-prod\",\n  \"querySource\" : \"INLINE_SQL\",\n  \"inlineSql\" : \"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100;\",\n  \"slowQueryId\" : \"sq-abc-123\",\n  \"parameters\" : {\n    \"customer_id\" : 12345,\n    \"status\" : \"PENDING\"\n  },\n  \"includeExplainAnalyze\" : false,\n  \"environment\" : \"PRODUCTION\",\n  \"applicationContext\" : {\n    \"service\" : \"order-service\",\n    \"endpoint\" : \"GET /api/v1/orders\",\n    \"p99LatencyMs\" : 847,\n    \"callFrequencyPerMinute\" : 450\n  }\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Accepted",
+        "code" : 202,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"analysisId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"databaseId\" : \"payment-db-prod\",\n  \"databaseType\" : \"POSTGRESQL\",\n  \"status\" : \"COMPLETED\",\n  \"submittedAt\" : 948603367000,\n  \"completedAt\" : 948603367000,\n  \"normalizedQuery\" : \"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\n  \"queryFingerprint\" : \"fp-a1b2c3d4e5f6\",\n  \"parsedStructure\" : {\n    \"joins\" : [ ],\n    \"tables\" : [ \"orders\" ],\n    \"usesSelectStar\" : true,\n    \"estimatedComplexity\" : \"SIMPLE\",\n    \"limit\" : 100,\n    \"orderBy\" : [ \"created_at DESC\" ],\n    \"filters\" : [ \"customer_id = ?\", \"status = ?\" ]\n  },\n  \"antiPatterns\" : [ {\n    \"severity\" : \"CRITICAL\",\n    \"projectedImprovementMs\" : 835,\n    \"affectedColumns\" : [ \"customer_id\", \"status\" ],\n    \"patternType\" : \"MISSING_INDEX\",\n    \"detail\" : \"No index on (customer_id, status) — full table scan on 12M rows.\"\n  }, {\n    \"severity\" : \"CRITICAL\",\n    \"projectedImprovementMs\" : 835,\n    \"affectedColumns\" : [ \"customer_id\", \"status\" ],\n    \"patternType\" : \"MISSING_INDEX\",\n    \"detail\" : \"No index on (customer_id, status) — full table scan on 12M rows.\"\n  } ],\n  \"performanceMetrics\" : {\n    \"currentP99Ms\" : 847,\n    \"currentP50Ms\" : 245,\n    \"rowsExamined\" : 12500000,\n    \"currentP95Ms\" : 620,\n    \"callsPerMinute\" : 450,\n    \"rowsReturned\" : 100,\n    \"ratioRowsExaminedToReturned\" : 125000.0,\n    \"totalTimeConsumedMinutes\" : 6352.5\n  },\n  \"recommendations\" : [ {\n    \"currentLatencyMs\" : 847,\n    \"notes\" : \"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\",\n    \"implementationEffort\" : \"EASY\",\n    \"estimatedCostUSDPerMonth\" : 12.5,\n    \"description\" : \"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\n    \"sqlToApply\" : \"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\n    \"implementationRisk\" : \"LOW\",\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"recommendationType\" : \"ADD_INDEX\",\n    \"title\" : \"Add composite index on orders(customer_id, status, created_at)\",\n    \"projectedLatencyMs\" : 12,\n    \"projectedImprovementPercent\" : 98.6\n  }, {\n    \"currentLatencyMs\" : 847,\n    \"notes\" : \"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\",\n    \"implementationEffort\" : \"EASY\",\n    \"estimatedCostUSDPerMonth\" : 12.5,\n    \"description\" : \"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\n    \"sqlToApply\" : \"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\n    \"implementationRisk\" : \"LOW\",\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"recommendationType\" : \"ADD_INDEX\",\n    \"title\" : \"Add composite index on orders(customer_id, status, created_at)\",\n    \"projectedLatencyMs\" : 12,\n    \"projectedImprovementPercent\" : 98.6\n  } ],\n  \"explainPlan\" : {\n    \"planNode\" : \"Seq Scan\",\n    \"table\" : \"orders\",\n    \"cost\" : \"125000.00..125000.00\",\n    \"rows\" : 12500000,\n    \"filter\" : \"(customer_id = 12345 AND status = 'PENDING')\"\n  },\n  \"aiSummary\" : \"This query scans 12.5M rows to return 100. Adding a composite index drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY to avoid locks.\",\n  \"errorMessage\" : \"errorMessage\"\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/analyze",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "analyze" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"databaseId\" : \"payment-db-prod\",\n  \"querySource\" : \"INLINE_SQL\",\n  \"inlineSql\" : \"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100;\",\n  \"slowQueryId\" : \"sq-abc-123\",\n  \"parameters\" : {\n    \"customer_id\" : 12345,\n    \"status\" : \"PENDING\"\n  },\n  \"includeExplainAnalyze\" : false,\n  \"environment\" : \"PRODUCTION\",\n  \"applicationContext\" : {\n    \"service\" : \"order-service\",\n    \"endpoint\" : \"GET /api/v1/orders\",\n    \"p99LatencyMs\" : 847,\n    \"callFrequencyPerMinute\" : 450\n  }\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-09-27T04:45:26.732465813Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "Fetch the detailed analysis result for a query",
+      "request" : {
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/analyses/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeExplainPlan=true",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "analyses", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+          "query" : [ {
+            "key" : "includeExplainPlan",
+            "value" : true
+          } ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/analyses/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeExplainPlan=true",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "analyses", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+            "query" : [ {
+              "key" : "includeExplainPlan",
+              "value" : true
+            } ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"analysisId\" : \"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\n  \"databaseId\" : \"payment-db-prod\",\n  \"databaseType\" : \"POSTGRESQL\",\n  \"status\" : \"COMPLETED\",\n  \"submittedAt\" : 948603367000,\n  \"completedAt\" : 948603367000,\n  \"normalizedQuery\" : \"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\n  \"queryFingerprint\" : \"fp-a1b2c3d4e5f6\",\n  \"parsedStructure\" : {\n    \"joins\" : [ ],\n    \"tables\" : [ \"orders\" ],\n    \"usesSelectStar\" : true,\n    \"estimatedComplexity\" : \"SIMPLE\",\n    \"limit\" : 100,\n    \"orderBy\" : [ \"created_at DESC\" ],\n    \"filters\" : [ \"customer_id = ?\", \"status = ?\" ]\n  },\n  \"antiPatterns\" : [ {\n    \"severity\" : \"CRITICAL\",\n    \"projectedImprovementMs\" : 835,\n    \"affectedColumns\" : [ \"customer_id\", \"status\" ],\n    \"patternType\" : \"MISSING_INDEX\",\n    \"detail\" : \"No index on (customer_id, status) — full table scan on 12M rows.\"\n  }, {\n    \"severity\" : \"CRITICAL\",\n    \"projectedImprovementMs\" : 835,\n    \"affectedColumns\" : [ \"customer_id\", \"status\" ],\n    \"patternType\" : \"MISSING_INDEX\",\n    \"detail\" : \"No index on (customer_id, status) — full table scan on 12M rows.\"\n  } ],\n  \"performanceMetrics\" : {\n    \"currentP99Ms\" : 847,\n    \"currentP50Ms\" : 245,\n    \"rowsExamined\" : 12500000,\n    \"currentP95Ms\" : 620,\n    \"callsPerMinute\" : 450,\n    \"rowsReturned\" : 100,\n    \"ratioRowsExaminedToReturned\" : 125000.0,\n    \"totalTimeConsumedMinutes\" : 6352.5\n  },\n  \"recommendations\" : [ {\n    \"currentLatencyMs\" : 847,\n    \"notes\" : \"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\",\n    \"implementationEffort\" : \"EASY\",\n    \"estimatedCostUSDPerMonth\" : 12.5,\n    \"description\" : \"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\n    \"sqlToApply\" : \"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\n    \"implementationRisk\" : \"LOW\",\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"recommendationType\" : \"ADD_INDEX\",\n    \"title\" : \"Add composite index on orders(customer_id, status, created_at)\",\n    \"projectedLatencyMs\" : 12,\n    \"projectedImprovementPercent\" : 98.6\n  }, {\n    \"currentLatencyMs\" : 847,\n    \"notes\" : \"Use CONCURRENTLY to avoid table lock. Index size ~380MB.\",\n    \"implementationEffort\" : \"EASY\",\n    \"estimatedCostUSDPerMonth\" : 12.5,\n    \"description\" : \"This index eliminates the full table scan and speeds up the ORDER BY clause.\",\n    \"sqlToApply\" : \"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\n    \"implementationRisk\" : \"LOW\",\n    \"recommendationId\" : \"b1a2c3d4-e5f6-7890-1234-567890abcdef\",\n    \"recommendationType\" : \"ADD_INDEX\",\n    \"title\" : \"Add composite index on orders(customer_id, status, created_at)\",\n    \"projectedLatencyMs\" : 12,\n    \"projectedImprovementPercent\" : 98.6\n  } ],\n  \"explainPlan\" : {\n    \"planNode\" : \"Seq Scan\",\n    \"table\" : \"orders\",\n    \"cost\" : \"125000.00..125000.00\",\n    \"rows\" : 12500000,\n    \"filter\" : \"(customer_id = 12345 AND status = 'PENDING')\"\n  },\n  \"aiSummary\" : \"This query scans 12.5M rows to return 100. Adding a composite index drops latency from 847ms to 12ms — a 70x speedup. Low risk; use CONCURRENTLY to avoid locks.\",\n  \"errorMessage\" : \"errorMessage\"\n}"
+      }, {
+        "name" : "Not Found",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/analyses/9c8f1a3b-6d7e-4a12-8f5e-123456789abc?includeExplainPlan=true",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "analyses", "9c8f1a3b-6d7e-4a12-8f5e-123456789abc" ],
+            "query" : [ {
+              "key" : "includeExplainPlan",
+              "value" : true
+            } ]
+          }
+        },
+        "status" : "Not Found",
+        "code" : 404,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-09-27T04:45:26.733848120Z\",\n  \"status\" : 404,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "List all slow queries across the platform",
+      "request" : {
+        "method" : "GET",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/slow-queries?databaseId=payment-db-prod&minLatencyMs=100&minCallFrequency=10&environment=DEV&orderBy=TOTAL_TIME_CONSUMED&window=LAST_24_HOURS&page=1&size=1",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "slow-queries" ],
+          "query" : [ {
+            "key" : "databaseId",
+            "value" : "payment-db-prod"
+          }, {
+            "key" : "minLatencyMs",
+            "value" : 100
+          }, {
+            "key" : "minCallFrequency",
+            "value" : 10
+          }, {
+            "key" : "environment",
+            "value" : "DEV"
+          }, {
+            "key" : "orderBy",
+            "value" : "TOTAL_TIME_CONSUMED"
+          }, {
+            "key" : "window",
+            "value" : "LAST_24_HOURS"
+          }, {
+            "key" : "page",
+            "value" : 1
+          }, {
+            "key" : "size",
+            "value" : 1
+          } ]
+        }
+      },
+      "response" : [ {
+        "name" : "OK",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/slow-queries?databaseId=payment-db-prod&minLatencyMs=100&minCallFrequency=10&environment=DEV&orderBy=TOTAL_TIME_CONSUMED&window=LAST_24_HOURS&page=1&size=1",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "slow-queries" ],
+            "query" : [ {
+              "key" : "databaseId",
+              "value" : "payment-db-prod"
+            }, {
+              "key" : "minLatencyMs",
+              "value" : 100
+            }, {
+              "key" : "minCallFrequency",
+              "value" : 10
+            }, {
+              "key" : "environment",
+              "value" : "DEV"
+            }, {
+              "key" : "orderBy",
+              "value" : "TOTAL_TIME_CONSUMED"
+            }, {
+              "key" : "window",
+              "value" : "LAST_24_HOURS"
+            }, {
+              "key" : "page",
+              "value" : 1
+            }, {
+              "key" : "size",
+              "value" : 1
+            } ]
+          }
+        },
+        "status" : "OK",
+        "code" : 200,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"content\" : [ {\n    \"avgLatencyMs\" : 620,\n    \"lastSeenAt\" : 948603367000,\n    \"recommendationCount\" : 2,\n    \"sampleQuery\" : \"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100\",\n    \"estimatedRecoverableLatencyMs\" : 835,\n    \"trend\" : \"WORSENING\",\n    \"rowsExamined\" : 12500000,\n    \"normalizedQuery\" : \"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\n    \"callFrequency\" : 450,\n    \"antiPatternsFound\" : [ \"SELECT_STAR\", \"MISSING_INDEX\", \"FULL_TABLE_SCAN\" ],\n    \"totalTimeConsumedMinutes\" : 6352.5,\n    \"firstSeenAt\" : 948603367000,\n    \"databaseType\" : \"POSTGRESQL\",\n    \"estimatedRecoverablePercent\" : 98.6,\n    \"indexUsage\" : [ ],\n    \"applicationContext\" : {\n      \"owner\" : \"order-team\",\n      \"endpoint\" : \"GET /api/v1/orders\",\n      \"service\" : \"order-service\"\n    },\n    \"slowQueryId\" : \"sq-abc-123\",\n    \"p50LatencyMs\" : 245,\n    \"databaseId\" : \"payment-db-prod\",\n    \"p95LatencyMs\" : 620,\n    \"rowsReturned\" : 100,\n    \"hasRecommendation\" : true,\n    \"queryFingerprint\" : \"fp-a1b2c3d4e5f6\",\n    \"p99LatencyMs\" : 847\n  }, {\n    \"avgLatencyMs\" : 620,\n    \"lastSeenAt\" : 948603367000,\n    \"recommendationCount\" : 2,\n    \"sampleQuery\" : \"SELECT * FROM orders WHERE customer_id = 12345 AND status = 'PENDING' ORDER BY created_at DESC LIMIT 100\",\n    \"estimatedRecoverableLatencyMs\" : 835,\n    \"trend\" : \"WORSENING\",\n    \"rowsExamined\" : 12500000,\n    \"normalizedQuery\" : \"SELECT * FROM orders WHERE customer_id = ? AND status = ? ORDER BY created_at DESC LIMIT 100\",\n    \"callFrequency\" : 450,\n    \"antiPatternsFound\" : [ \"SELECT_STAR\", \"MISSING_INDEX\", \"FULL_TABLE_SCAN\" ],\n    \"totalTimeConsumedMinutes\" : 6352.5,\n    \"firstSeenAt\" : 948603367000,\n    \"databaseType\" : \"POSTGRESQL\",\n    \"estimatedRecoverablePercent\" : 98.6,\n    \"indexUsage\" : [ ],\n    \"applicationContext\" : {\n      \"owner\" : \"order-team\",\n      \"endpoint\" : \"GET /api/v1/orders\",\n      \"service\" : \"order-service\"\n    },\n    \"slowQueryId\" : \"sq-abc-123\",\n    \"p50LatencyMs\" : 245,\n    \"databaseId\" : \"payment-db-prod\",\n    \"p95LatencyMs\" : 620,\n    \"rowsReturned\" : 100,\n    \"hasRecommendation\" : true,\n    \"queryFingerprint\" : \"fp-a1b2c3d4e5f6\",\n    \"p99LatencyMs\" : 847\n  } ],\n  \"totalElements\" : 0,\n  \"totalPages\" : 6,\n  \"summary\" : {\n    \"estimatedRecoverableLatencyPercent\" : 34.5,\n    \"totalQueriesAnalyzed\" : 45280,\n    \"totalTimeConsumedMinutes\" : 3420.5,\n    \"queriesNeedingAttention\" : 12\n  }\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "GET",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/slow-queries?databaseId=payment-db-prod&minLatencyMs=100&minCallFrequency=10&environment=DEV&orderBy=TOTAL_TIME_CONSUMED&window=LAST_24_HOURS&page=1&size=1",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "slow-queries" ],
+            "query" : [ {
+              "key" : "databaseId",
+              "value" : "payment-db-prod"
+            }, {
+              "key" : "minLatencyMs",
+              "value" : 100
+            }, {
+              "key" : "minCallFrequency",
+              "value" : 10
+            }, {
+              "key" : "environment",
+              "value" : "DEV"
+            }, {
+              "key" : "orderBy",
+              "value" : "TOTAL_TIME_CONSUMED"
+            }, {
+              "key" : "window",
+              "value" : "LAST_24_HOURS"
+            }, {
+              "key" : "page",
+              "value" : 1
+            }, {
+              "key" : "size",
+              "value" : 1
+            } ]
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-09-27T04:45:26.734923137Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    }, {
+      "name" : "Apply an optimization recommendation",
+      "request" : {
+        "method" : "POST",
+        "header" : [ {
+          "key" : "Authorization",
+          "value" : "Bearer {{bearerToken}}"
+        }, {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        }, {
+          "key" : "Accept",
+          "value" : "application/json"
+        } ],
+        "url" : {
+          "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+        },
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\n  \"mode\" : \"CANARY_ON_REPLICA\",\n  \"reason\" : \"Index on orders(customer_id, status) — canary on read replica first.\",\n  \"scheduledAt\" : 1790560800000,\n  \"revertWindowMinutes\" : 60,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        }
+      },
+      "response" : [ {
+        "name" : "Accepted",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"mode\" : \"CANARY_ON_REPLICA\",\n  \"reason\" : \"Index on orders(customer_id, status) — canary on read replica first.\",\n  \"scheduledAt\" : 1790560800000,\n  \"revertWindowMinutes\" : 60,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Accepted",
+        "code" : 202,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"actionId\" : \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\n  \"recommendationId\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"databaseId\" : \"payment-db-prod\",\n  \"mode\" : \"CANARY_ON_REPLICA\",\n  \"status\" : \"APPLYING\",\n  \"startedAt\" : 948603367000,\n  \"completedAt\" : 948603367000,\n  \"sqlExecuted\" : \"CREATE INDEX CONCURRENTLY idx_orders_cust_status_created ON orders (customer_id, status, created_at DESC);\",\n  \"beforeLatencyMs\" : 847,\n  \"afterLatencyMs\" : 12,\n  \"actualImprovementPercent\" : 98.6,\n  \"storageAddedBytes\" : 398000000,\n  \"revertUntil\" : 948603367000,\n  \"appliedBy\" : \"dba@forgesphere.example.com\",\n  \"auditReference\" : \"audit://querylens/action-f47ac10b\",\n  \"errorMessage\" : \"errorMessage\"\n}"
+      }, {
+        "name" : "Bad Request",
+        "originalRequest" : {
+          "method" : "POST",
+          "header" : [ {
+            "key" : "Authorization",
+            "value" : "Bearer {{bearerToken}}"
+          }, {
+            "key" : "Content-Type",
+            "value" : "application/json"
+          }, {
+            "key" : "Accept",
+            "value" : "application/json"
+          } ],
+          "url" : {
+            "raw" : "{{baseUrl}}/recommendations/b1a2c3d4-e5f6-7890-1234-567890abcdef/apply",
+            "host" : [ "{{baseUrl}}" ],
+            "path" : [ "recommendations", "b1a2c3d4-e5f6-7890-1234-567890abcdef", "apply" ]
+          },
+          "body" : {
+            "mode" : "raw",
+            "raw" : "{\n  \"mode\" : \"CANARY_ON_REPLICA\",\n  \"reason\" : \"Index on orders(customer_id, status) — canary on read replica first.\",\n  \"scheduledAt\" : 1790560800000,\n  \"revertWindowMinutes\" : 60,\n  \"notifyChannels\" : [ \"SLACK\" ]\n}",
+            "options" : {
+              "raw" : {
+                "language" : "json"
+              }
+            }
+          }
+        },
+        "status" : "Bad Request",
+        "code" : 400,
+        "_postman_previewlanguage" : "json",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json"
+        } ],
+        "cookie" : [ ],
+        "body" : "{\n  \"timestamp\" : \"2026-09-27T04:45:26.735369633Z\",\n  \"status\" : 400,\n  \"code\" : \"request_failed\",\n  \"userMessage\" : \"Request failed\",\n  \"systemMessage\" : \"Sample error for documentation purposes\",\n  \"path\" : \"{{baseUrl}}\",\n  \"correlationId\" : \"sample-correlation-id\"\n}"
+      } ]
+    } ]
+  } ]
+}
